@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Book } from './book';
+import { Book } from '../books/book';
 
 export function generateBooks(count: number, firstId: number): Book[] {
   const books: Book[] = [];

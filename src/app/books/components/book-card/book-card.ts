@@ -1,17 +1,48 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Book } from '../book';
+import { Book } from '../../book';
 import { BookDetail } from '../book-detail/book-detail';
+import { BookForm} from '../book-form/book-form';
 
 @Component({
   selector: 'app-book-card',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, BookDetail],
+  imports: [MatCardModule, BookForm, MatButtonModule, MatIconModule, BookDetail],
   templateUrl: './book-card.html',
   styleUrl: './book-card.css'
 })
 export class BookCard {
+  book = input.required<Book>();
+
+  borrowed = output<void>();
+  returned = output<void>();
+  edited = output<Book>(); 
+  deleted = output<number>();
+
+  showDetails: boolean = false;
+  favorite: boolean = false;
+  editing: boolean = false; 
+  confirmingDelete: boolean = false;
+
+  toggleEdit(): void {
+    this.editing = !this.editing;
+    this.confirmingDelete = false;
+  }
+
+  toggleDeleteConfirm(): void {
+    this.confirmingDelete = !this.confirmingDelete;
+    this.editing = false;
+  }
+
+  confirmDelete(): void {
+    this.deleted.emit(this.book().id);
+  }
+
+  onSaveEdit(updatedBook: Book): void {
+    this.edited.emit(updatedBook);
+    this.editing = false; 
+  }
 
   genreColor(): string {
     switch (this.book().genre) {
@@ -34,12 +65,6 @@ export class BookCard {
     }
   }
 
-
-  book = input.required<Book>();
-
-  showDetails: boolean = false;
-  favorite: boolean = false;
-
   toggleDetails(): void {
     this.showDetails = !this.showDetails;
   }
@@ -48,14 +73,11 @@ export class BookCard {
     this.book().favorite = !this.book().favorite;
   }
 
-
   borrow(): void {
-    this.book().available = false;
+    this.borrowed.emit();
   }
   
   giveBack(): void {
-    this.book().available = true;
+    this.returned.emit();
   }
-
-  
 }
