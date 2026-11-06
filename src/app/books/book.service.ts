@@ -164,9 +164,9 @@ this.books().filter(book => !book.available)
   }
 
   
-  getTotalBooksCount(): number {
-    return this.books.length;
-  }
+getTotalBooksCount(): number {
+  return this.books().length;
+}
 
 
   canBorrowBook(id: number): boolean {

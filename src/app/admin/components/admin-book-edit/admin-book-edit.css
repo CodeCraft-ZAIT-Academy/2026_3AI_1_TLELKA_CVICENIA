@@ -1,0 +1,26 @@
+section {
+  max-width: 750px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  color: #263238;
+}
+
+h2 {
+  color: #1f3a5f;
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+a {
+  color: #1f3a5f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  color: #3b6ea5;
+  text-decoration: underline;
+}
