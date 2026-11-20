@@ -1,5 +1,10 @@
 <section>
   <h2>Zoznam kníh</h2>
+<p>
+  Všetkých kníh: {{ totalBooks() }} ·
+  Dostupných: {{ (books() | bookFilter: '' : 'available').length }} ·
+  Obľúbených: {{ (books() | bookFilter: '' : 'all' : true).length }}
+</p>
 
   <div class="controls-bar">
     <mat-form-field appearance="outline" class="search-field">
@@ -12,6 +17,8 @@
         (ngModelChange)="searchText.set($event); firstPage()"
         placeholder="Napr. Hobit alebo Tolkien"
       />
+
+ 
 
       @if (searchText()) {
         <button matIconButton matSuffix (click)="clearSearch()" aria-label="Vyčistiť">
@@ -44,6 +51,8 @@
       </mat-select>
     </mat-form-field>
   </div>
+
+ 
 
   <p>Zobrazené knihy: {{ visibleBooks().length }}</p>
 

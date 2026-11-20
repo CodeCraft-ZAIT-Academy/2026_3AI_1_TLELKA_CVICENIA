@@ -9,44 +9,60 @@ import { MatSelectModule } from '@angular/material/select';
 import { BookCard } from '../book-card/book-card';
 import { Book } from '../../book';
 import { BookService } from '../../book.service';
+import { BookFilterPipe } from '../../book-filter-pipe';
 
 
 
 @Component({
   selector: 'app-book-list',
-  imports: [
-    BookCard,
-    FormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonToggleModule,
-    MatSelectModule
-  ],
+imports: [
+  BookCard,
+  FormsModule,
+  MatButtonModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatButtonToggleModule,
+  MatSelectModule,
+  BookFilterPipe
+],
+  providers: [BookFilterPipe],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css'
 })
 export class BookList {
   private bookService = inject(BookService);
+  private bookFilter = inject(BookFilterPipe);
+  readonly books = this.bookService.books;
 
-books: Signal<Book[]> = this.bookService.books;
+
 
   readonly searchText = signal('');
   readonly availabilityFilter = signal('all');
   readonly sortBy = signal('none');
+readonly favoritesOnly = signal(false);
+readonly totalBooks = computed(() => this.books().length);
 
   readonly currentPage = signal(1);
   readonly pageSize = signal(5);
   readonly pageSizes = [5, 10, 20];
   
-  readonly visibleBooks = computed(() =>
-  this.bookService.getFilteredBooks(
+readonly visibleBooks = computed(() =>
+  this.bookFilter.transform(
+    this.bookService.getSortedBooks(this.sortBy()),
     this.searchText(),
     this.availabilityFilter(),
-    this.sortBy()
-  )
-);
+    this.favoritesOnly()
+  ));
+
+  resetFilters(): void {
+  this.searchText.set('');
+  this.availabilityFilter.set('all');
+  this.favoritesOnly.set(false);
+  this.sortBy.set('none');
+  this.firstPage();
+}
+
   onFilterChange(): void {
     this.currentPage.set(1);
   }

@@ -16,9 +16,7 @@ private readonly bookApi = inject(BookApiService);
   readonly books = this._books.asReadonly();
 
   readonly borrowedBooks = computed(() => this.books().filter(book => !book.available));
-  readonly availableBooks = computed(() => this.books().filter(book => book.available));
-  readonly favoriteBooks = computed(() => this.books().filter(book => book.favorite));
-
+  
 
 
 constructor() {
@@ -106,11 +104,11 @@ deleteBook(id: number): void {
     );
   }
 
-  getFilteredBooks(
-    searchText: string,
-    availability: string,
-    sortBy: string
-  ): Book[] {
+ getFilteredBooks(
+  searchText: string,
+  availability: string,
+  sortBy: string
+): Book[] {
     const text = searchText.trim().toLowerCase();
   
     let result = this.books().filter(book =>
@@ -165,6 +163,19 @@ getTotalBooksCount(): number {
       this.borrowedBooks().length < this.maxBorrowed;
   }
 
+getSortedBooks(sortBy: string): Book[] {
+  const result = [...this.books()];
 
+  switch (sortBy) {
+    case 'title':
+      return result.sort((a, b) => a.title.localeCompare(b.title));
+    case 'year':
+      return result.sort((a, b) => b.year - a.year);
+    case 'rating':
+      return result.sort((a, b) => b.rating - a.rating);
+    default:
+      return result;
+  }
+}
 
   }
