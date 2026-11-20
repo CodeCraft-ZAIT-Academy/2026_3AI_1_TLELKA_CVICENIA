@@ -22,4 +22,7 @@ export class BookPage {
   readonly book = computed(() =>
     this.bookService.getBookById(Number(this.id()))
   );
+
+  readonly loading = this.bookService.loading;
+  readonly loadError = this.bookService.loadError;
 }

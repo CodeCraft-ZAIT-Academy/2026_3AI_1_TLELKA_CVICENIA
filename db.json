@@ -2,9 +2,9 @@
   "books": [
     {
       "id": 1,
-      "title": "Hobit",
-      "author": "J. R. R. Tolkien",
-      "year": 1937,
+      "title": "Zburame kysucu juu",
+      "author": "J. R. R. Cvicisko",
+      "year": 6767,
       "available": true,
       "genre": "Fantasy",
       "rating": 5,
@@ -13,13 +13,13 @@
     },
     {
       "id": 2,
-      "title": "1984",
+      "title": "Vypalime cierne",
       "author": "George Orwell",
-      "year": 1949,
-      "available": false,
-      "genre": "Dystopia",
-      "rating": 4,
-      "pages": 328,
+      "year": 2027,
+      "available": true,
+      "genre": "Horror",
+      "rating": 5,
+      "pages": 67,
       "favorite": false
     },
     {

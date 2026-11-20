@@ -1,53 +1,45 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Book } from './book';
-import { generateBooks } from './book-generator';
-
+import { computed, inject, Injectable, signal } from '@angular/core';
+  import { BookApiService } from './book-api.service';
+  import { Book } from './book';
 
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
-  private readonly myBooks: Book[] = [
-    {
-      id: 1,
-      title: 'Hobit',
-      author: 'J. R. R. Tolkien',
-      year: 1937,
-      available: true,
-      genre: 'Fantasy',
-      rating: 5,
-      pages: 310,
-      favorite: false,
-    },
-    {
-      id: 2,
-      title: '1984',
-      author: 'George Orwell',
-      year: 1947,
-      available: false,
-      genre: 'Dystopia',
-      rating: 5,
-      pages: 310,
-      favorite: false,
-    },
-    {
-      id: 3,
-      title: 'Malý Princ',
-      author: 'Exupéry',
-      year: 1943,
-      available: true,
-      genre: 'Fiction',
-      rating: 5,
-      pages: 310,
-      favorite: false,
-    },
-  ];
+  
+private readonly bookApi = inject(BookApiService);
 
   readonly maxBorrowed: number = 10;
-  private readonly _books = signal<Book[]>(
-    this.limitBorrowed(this.myBooks.concat(generateBooks(40, 4)))
-  );
+  readonly loading = signal(true);
+  readonly loadError = signal('');
+
+  private readonly _books = signal<Book[]>([]);
   readonly books = this._books.asReadonly();
 
+  readonly borrowedBooks = computed(() => this.books().filter(book => !book.available));
+  readonly availableBooks = computed(() => this.books().filter(book => book.available));
+  readonly favoriteBooks = computed(() => this.books().filter(book => book.favorite));
+
+
+
+constructor() {
+    this.bookApi.getBooks().subscribe({
+      next: books => {
+        this._books.set(this.limitBorrowed(books));
+        this.loading.set(false);
+      },
+      error: error => {
+        console.error('Načítanie kníh zo servera zlyhalo:', error);
+        this.loadError.set('Knihy sa nepodarilo načítať. Skontroluj, či JSON Server beží.');
+        this.loading.set(false);
+      }
+    });
+  }
+
+
+
+
+
+ 
   limitBorrowed(books: Book[]): Book[] {
     let borrowedCount = 0;
 
@@ -89,9 +81,7 @@ deleteBook(id: number): void {
   );
 }
   
-readonly borrowedBooks = computed(() =>
-this.books().filter(book => !book.available)
-);
+
 
   borrowBook(id: number): boolean {
     if (!this.canBorrowBook(id)) return false;
@@ -176,11 +166,5 @@ getTotalBooksCount(): number {
   }
 
 
-readonly availableBooks = computed(() =>
-  this.books().filter(book => book.available)
-);
-readonly favoriteBooks = computed(() =>
-  this.books().filter(book => book.favorite)
-);
 
   }

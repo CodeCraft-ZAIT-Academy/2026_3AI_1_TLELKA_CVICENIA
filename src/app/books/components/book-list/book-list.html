@@ -1,5 +1,4 @@
 <section>
-<app-server-book-list />
   <h2>Zoznam kníh</h2>
 
   <div class="controls-bar">
@@ -58,9 +57,22 @@
 </app-book-card>
     }
   }
-  @empty {
-    <p>Nenašli sa žiadne knihy. Skús zmeniť hľadanie alebo filter.</p>
+
+
+  
+
+@empty {
+    @if (loading()) {
+      <p role="status">Načítavam knihy…</p>
+    } @else if (loadError()) {
+      <p role="alert">{{ loadError() }}</p>
+    } @else if (books().length === 0) {
+      <p class="empty">V knižnici zatiaľ nie sú žiadne knihy.</p>
+    } @else {
+      <p class="empty">Nenašli sa žiadne knihy. Skús zmeniť hľadanie alebo filter.</p>
+    }
   }
+
 
   <div class="pagination">
     <button mat-stroked-button (click)="previousPage()" [disabled]="currentPage() === 1">

@@ -19,9 +19,14 @@ import { BookService } from '../../../books/book.service';
 export class AdminBooks {
   private bookService = inject(BookService);
 
+  readonly loading = this.bookService.loading;
+  readonly loadError = this.bookService.loadError;
+
   readonly books = this.bookService.books;
 
   readonly confirmingDeleteId = signal<number | undefined>(undefined);
+
+
 
   askDelete(book: Book): void {
     this.confirmingDeleteId.set(book.id);
@@ -35,4 +40,11 @@ export class AdminBooks {
     this.bookService.deleteBook(book.id);
     this.confirmingDeleteId.set(undefined);
   }
+
+
+
+
+
+
+
 }
